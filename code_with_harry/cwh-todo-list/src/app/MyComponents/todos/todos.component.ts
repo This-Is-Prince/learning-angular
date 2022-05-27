@@ -8,27 +8,14 @@ import { Todo } from 'src/app/Todo';
 })
 export class TodosComponent implements OnInit {
   todos: Todo[] = [];
+
   constructor() {
-    this.todos = [
-      {
-        sno: 1,
-        title: 'This is title1',
-        desc: 'Description',
-        active: true,
-      },
-      {
-        sno: 2,
-        title: 'This is title2',
-        desc: 'Description',
-        active: true,
-      },
-      {
-        sno: 3,
-        title: 'This is title3',
-        desc: 'Description',
-        active: true,
-      },
-    ];
+    const localItem = localStorage.getItem('todos');
+    if (localItem == null) {
+      this.todos = [];
+    } else {
+      this.todos = JSON.parse(localItem);
+    }
   }
 
   ngOnInit(): void {}
@@ -38,7 +25,26 @@ export class TodosComponent implements OnInit {
     // this.todos = this.todos.filter((prevTodo) => {
     //   return prevTodo.sno !== todo.sno;
     // });
-
     this.todos.splice(this.todos.indexOf(todo), 1);
+    localStorage.setItem('todos', JSON.stringify(this.todos));
+  }
+
+  addTodo(todo: Todo) {
+    console.log(todo);
+    this.todos.push(todo);
+    localStorage.setItem('todos', JSON.stringify(this.todos));
+  }
+
+  toggleTodo(todo: Todo) {
+    // this.todos = this.todos.map((prevTodo) => {
+    //   if (prevTodo.sno === todo.sno) {
+    //     return { ...prevTodo, active: !todo.active };
+    //   } else {
+    //     return prevTodo;
+    //   }
+    // });
+    const index = this.todos.indexOf(todo);
+    this.todos[index].active = !this.todos[index].active;
+    localStorage.setItem('todos', JSON.stringify(this.todos));
   }
 }
